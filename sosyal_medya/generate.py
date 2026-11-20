@@ -1,4 +1,4 @@
-"""Generate the envlens Instagram carousel (1080x1350 dark terminal slides)."""
+"""Generate the envlens Instagram carousel (1080x1350 dark cyber slides)."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from pygments.token import Token
 WIDTH, HEIGHT = 1080, 1350
 MARGIN = 72
 OUTPUT = Path(__file__).resolve().parent
+TOTAL = 4
 
 BG_TOP = (9, 13, 19)
 BG_BOTTOM = (16, 23, 33)
@@ -97,7 +98,12 @@ def canvas(
             fill=(*glow, alpha),
         )
 
-    draw.text((MARGIN, 52), "BAYSOZ YAZILIM", font=font(21, mono=False, bold=True), fill=MUTED)
+    draw.text(
+        (MARGIN, 52),
+        "BAYSOZ YAZILIM // OPEN SOURCE",
+        font=font(21, mono=False, bold=True),
+        fill=MUTED,
+    )
     draw.text(
         (WIDTH - MARGIN, 52),
         "envlens // v0.1.0",
@@ -117,7 +123,7 @@ def canvas(
     draw.text((MARGIN, 1252), "@yazilimbaysoz", font=font(20), fill=MUTED)
     draw.text(
         (WIDTH - MARGIN, 1252),
-        f"{slide:02d}/03",
+        f"{slide:02d}/{TOTAL:02d}",
         font=font(20, bold=True),
         fill=accent,
         anchor="ra",
@@ -185,23 +191,23 @@ def pill(draw: ImageDraw.ImageDraw, x: int, y: int, text: str, color: str) -> in
 
 def slide_one() -> Image.Image:
     image, draw = canvas(
-        "BOLUM 01 / PROBLEM",
+        "BÖLÜM 01 / PROBLEM",
         ("Bir eksik key,", "03:00 incident'i."),
         RED,
         1,
     )
     draw.text(
         (MARGIN, 344),
-        "Ortam degiskenleri kod ile deployment arasindaki gorunmez kopukluktur.",
+        "Ortam değişkenleri, kod ile deployment arasındaki görünmez kopukluktur.",
         font=font(21, mono=False),
         fill=MUTED,
     )
 
     rows = (
-        (RED, "MISSING", "Kod okur, hic kimse tanimlamamis"),
+        (RED, "MISSING", "Kod okur, hiç kimse tanımlamamış"),
         (YELLOW, "UNDECLARED", "Key var ama .env.example yok"),
-        (PINK, "LEAK", "Gercek sifre git'e commit'lenmis"),
-        (CYAN, "DRIFT", "Staging ve prod farkli degerler"),
+        (PINK, "LEAK", "Gerçek şifre git'e commit'lenmiş"),
+        (CYAN, "DRIFT", "Staging ve prod farklı değerler"),
     )
     top = 414
     for color, label, detail in rows:
@@ -225,7 +231,7 @@ def slide_one() -> Image.Image:
         "$ deploy --env production\n"
         "CRITICAL  STRIPE_KEY missing (app.py:42)\n"
         "CRITICAL  AWS_SECRET leaked (.env.local:7)\n"
-        "exit 1  //  03:12, 4 developers awake",
+        "exit 1  //  03:12, 4 developer ayakta",
         MARGIN + 28,
         950,
         BashLexer(),
@@ -234,7 +240,7 @@ def slide_one() -> Image.Image:
     )
     draw.text(
         (MARGIN, 1172),
-        "envlens: 5 kural, 0 runtime bagimliligi, tamamen yerel.",
+        "envlens: 5 kural, 0 runtime bağımlılığı, tamamen yerel.",
         font=font(19),
         fill=GREEN,
     )
@@ -243,14 +249,14 @@ def slide_one() -> Image.Image:
 
 def slide_two() -> Image.Image:
     image, draw = canvas(
-        "BOLUM 02 / MIMARI",
-        ("Kodunu, .env'ni", "ve CI'ini karsilastirir."),
+        "BÖLÜM 02 / MİMARİ",
+        ("Kodunu, .env'ni", "ve CI'ını karşılaştırır."),
         CYAN,
         2,
     )
     draw.text(
         (MARGIN, 344),
-        "Tek komut; kaynaklari, template'i ve manifestleri tarayip carprasir.",
+        "Tek komut; kaynakları, template'i ve manifestleri tarayıp çaprazlar.",
         font=font(21, mono=False),
         fill=MUTED,
     )
@@ -295,10 +301,10 @@ def slide_two() -> Image.Image:
         outline=(*rgb(GREEN), 70),
         width=1,
     )
-    draw.text((MARGIN + 24, 1052), "TASARIM ILKELERI", font=font(19, bold=True), fill=GREEN)
+    draw.text((MARGIN + 24, 1052), "TASARIM İLKELERİ", font=font(19, bold=True), fill=GREEN)
     draw.text(
         (MARGIN + 24, 1092),
-        "stdlib only  /  ag yok  /  deterministik  /  secret degerleri asla yazdirmaz",
+        "stdlib only  /  ağ yok  /  deterministik  /  gizli değerleri asla yazdırmaz",
         font=font(18, mono=False),
         fill=WHITE,
     )
@@ -307,14 +313,67 @@ def slide_two() -> Image.Image:
 
 def slide_three() -> Image.Image:
     image, draw = canvas(
-        "BOLUM 03 / KURULUM",
-        ("Bugun dene,", "yildizi birak."),
-        GREEN,
+        "BÖLÜM 03 / 5 KURAL",
+        ("Beş kural,", "tek komut."),
+        YELLOW,
         3,
     )
     draw.text(
         (MARGIN, 344),
-        "Python 3.11+ ve sifir runtime bagimliligi. Kur, tara, rahat uyu.",
+        "Secret scanner'ların aksine ilişkiyi görür: kod + template + deployment.",
+        font=font(21, mono=False),
+        fill=MUTED,
+    )
+
+    rows = (
+        (RED, "CRITICAL", "MISSING", "Kod okur, hiçbir yerde tanımlı değil"),
+        (PINK, "CRITICAL", "LEAK", "Credential benzeri değer commit'lenmiş"),
+        (YELLOW, "HIGH", "UNDECLARED", "Key var, .env.example'da yok"),
+        (CYAN, "MEDIUM", "DRIFT", "Aynı key, farklı ortamlarda farklı"),
+        (VIOLET, "LOW", "STALE", "Artık kimsenin okumadığı key"),
+    )
+    top = 414
+    for color, severity, label, detail in rows:
+        draw.rounded_rectangle(
+            [MARGIN, top, WIDTH - MARGIN, top + 88],
+            radius=12,
+            fill=(18, 26, 37, 235),
+            outline=(*rgb(color), 70),
+            width=1,
+        )
+        draw.rounded_rectangle(
+            [MARGIN, top, MARGIN + 6, top + 88], radius=3, fill=(*rgb(color), 255)
+        )
+        draw.text((MARGIN + 26, top + 16), severity, font=font(15, bold=True), fill=color)
+        draw.text((MARGIN + 26, top + 42), label, font=font(22, bold=True), fill=WHITE)
+        draw.text((MARGIN + 300, top + 28), detail, font=font(17, mono=False), fill=MUTED)
+        top += 100
+
+    terminal(draw, MARGIN, 936, WIDTH - 2 * MARGIN, 224, "envlens scan . --format json", YELLOW)
+    code(
+        draw,
+        "$ envlens scan . --fail-on critical\n"
+        "PASS  none  //  23 files | 37 refs | 19 declarations\n"
+        "Scanned in 0.04s  --  exit 0",
+        MARGIN + 28,
+        1008,
+        BashLexer(),
+        size=19,
+        leading=42,
+    )
+    return image
+
+
+def slide_four() -> Image.Image:
+    image, draw = canvas(
+        "BÖLÜM 04 / KURULUM",
+        ("Bugün dene,", "yıldızı bırak."),
+        GREEN,
+        4,
+    )
+    draw.text(
+        (MARGIN, 344),
+        "Python 3.11+ ve sıfır runtime bağımlılığı. Kur, tara, rahat uyu.",
         font=font(21, mono=False),
         fill=MUTED,
     )
@@ -343,7 +402,7 @@ def slide_three() -> Image.Image:
     )
     draw.text(
         (MARGIN + 26, 846),
-        "MIT lisans  /  katki ve issue'ler acik",
+        "MIT lisans  /  katkı ve issue'ler açık",
         font=font(17, mono=False),
         fill=MUTED,
     )
@@ -354,26 +413,32 @@ def slide_three() -> Image.Image:
 
     draw.text(
         (MARGIN, 1030),
-        "Bir yildiz, bir daha 03:00 incident'i az.",
+        "Bir yıldız, bir daha 03:12 incident'i az.",
         font=font(25, mono=False, bold=True),
         fill=WHITE,
     )
     draw.text(
         (MARGIN, 1082),
-        "Star + fork + paylas. #DevSecOps #Python #AcikKaynak",
+        "Star + fork + paylaş. #DevSecOps #Python #AçıkKaynak",
         font=font(18),
         fill=MUTED,
     )
-    draw.text((MARGIN, 1140), "envlens  //  ortam degiskenlerine x-ray", font=font(20), fill=GREEN)
+    draw.text((MARGIN, 1140), "envlens  //  ortam değişkenlerine x-ray", font=font(20), fill=GREEN)
     return image
 
 
 def main() -> None:
-    for index, builder in enumerate((slide_one, slide_two, slide_three), start=1):
+    names = ("kapak", "mimari", "kurallar", "kurulum")
+    for index, builder in enumerate((slide_one, slide_two, slide_three, slide_four), start=1):
         image = builder()
-        target = OUTPUT / f"{index:02d}_envlens_{('kapak', 'mimari', 'kurulum')[index - 1]}.png"
+        target = OUTPUT / f"{index:02d}_envlens_{names[index - 1]}.png"
         image.save(target, format="PNG", optimize=True)
         print(f"Wrote {target.name} ({image.width}x{image.height})")
+    for stale in ("03_envlens_kurulum.png",):
+        old = OUTPUT / stale
+        if old.exists():
+            old.unlink()
+            print(f"Removed stale {stale}")
 
 
 if __name__ == "__main__":

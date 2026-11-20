@@ -1,0 +1,21 @@
+Sabah 03:12. Deploy çöktü. Sebep: kimsenin tanımlamadığı tek bir environment variable. 🚨
+
+Tam olarak bu yüzden **envlens**'i yazdık. Kodunu, `.env` dosyalarını, Docker Compose'u ve GitHub Actions'ı tarayıp ortam değişkeni kazalarını deploy'dan **önce** yakalayan, sıfır bağımlılıklı küçük bir CLI.
+
+Çözdüğü problem: "Benim makinemde çalışıyor" sendromu, eksik key'ler, sızdırılmış şifreler ve staging ile prod arasındaki sessiz config drift'i. Secret tarayıcıları tek bir değere bakar; envlens kod ile konfigürasyon arasındaki **ilişkiyi** görür.
+
+Öne çıkan özellikler:
+🔍 Beş akıllı kural: MISSING, UNDECLARED, STALE, LEAK ve DRIFT — her biri dosya ve satır numarasıyla.
+⚡ Sıfır runtime bağımlılığı, ağ çağrısı yok, telemetri yok. Python standart kütüphanesiyle yazıldı; air-gapped CI'da bile güvenle çalışır.
+📊 JSON ve Markdown raporları, `--fail-on` eşikleri ve 10+ dil desteğiyle doğrudan pipeline'ına girer. Gizli değerleri asla yazdırmaz.
+
+Kurulumu 10 saniye sürer:
+uv tool install envlens
+envlens scan . --fail-on high
+
+MIT lisanslı, tamamen açık kaynak. Bir sonraki 03:12 incident'ini bir yıldızla birlikte engelleyelim ⭐
+
+👇 Kaydır: problem, mimari, 5 kural ve kurulum.
+🔗 github.com/yazilimbaysoz-svg/envlens
+
+#envlens #baysozyazilim #acikkaynak #opensource #devsecops #security #siberguvenlik #python #cli #devtools #github #ci #cicd #yaml #docker #environmentvariables #secretsmanagement #configdrift #yazilim #softwareengineering #developertools #cybersecurity #zerodependencies #buildinpublic #hacktoberfest

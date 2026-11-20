@@ -6,7 +6,8 @@
 | --- | --- | --- |
 | 01 | `01_envlens_kapak.png` | Kapak + problem: eksik key, sızdırılmış şifre, drift, stale |
 | 02 | `02_envlens_mimari.png` | Gerçek terminal çıktısı + 4 aşamalı mimari şeması |
-| 03 | `03_envlens_kurulum.png` | Kurulum komutları, GitHub linki ve çağrı |
+| 03 | `03_envlens_kurallar.png` | Beş kural (MISSING, LEAK, UNDECLARED, DRIFT, STALE) + temiz tarama örneği |
+| 04 | `04_envlens_kurulum.png` | Kurulum komutları, GitHub linki ve çağrı |
 
 Tüm görseller 1080x1350 px, koyu terminal estetiğinde ve `generate.py` ile üretilmiştir.
 
