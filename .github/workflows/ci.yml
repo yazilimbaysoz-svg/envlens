@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: pytest (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+      - name: Install project
+        run: uv sync --python ${{ matrix.python-version }}
+      - name: Run tests
+        run: uv run --python ${{ matrix.python-version }} pytest --cov=envlens --cov-report=term-missing
+      - name: Self-scan with envlens
+        run: uv run --python ${{ matrix.python-version }} envlens scan . --fail-on high
+
+  lint:
+    name: ruff + semgrep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install project
+        run: uv sync
+      - name: Ruff lint
+        run: uvx ruff check src tests
+      - name: Ruff format
+        run: uvx ruff format --check src tests
+      - name: Semgrep
+        run: uvx semgrep scan --config p/python --config p/secrets --metrics off --error src
